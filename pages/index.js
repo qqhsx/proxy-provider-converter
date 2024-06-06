@@ -34,6 +34,10 @@ export default function Home() {
       position: "bottom-center",
     });
 
+  const handleAddUrl = () => {
+    setUrls([...urls, ""]);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <Head>
