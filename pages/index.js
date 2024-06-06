@@ -34,42 +34,6 @@ export default function Home() {
       position: "bottom-center",
     });
 
-  const clashConfig = `# Clash 配置格式
-
-proxy-providers:
-  ${urlHost || "provider1"}:
-    type: http
-    url: ${convertedUrls[0]?.convertedUrl}
-    interval: 600
-    path: ./${urlHost || "provider1"}.yaml
-    health-check:
-      enable: true
-      interval: 600
-      url: http://www.gstatic.com/generate_204
-`;
-
-  const surgeConfig = `# Surge 配置格式
-
-[Proxy Group]
-${urlHost || "egroup"} = select, policy-path=${convertedUrls[0]?.convertedUrl}
-`;
-
-  const handleUrlChange = (index, e) => {
-    const updatedUrls = [...urls];
-    updatedUrls[index] = e.target.value;
-    setUrls(updatedUrls);
-  };
-
-  const handleAddUrl = () => {
-    setUrls([...urls, ""]);
-  };
-
-  const handleRemoveUrl = (index) => {
-    const updatedUrls = [...urls];
-    updatedUrls.splice(index, 1);
-    setUrls(updatedUrls);
-  };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <Head>
@@ -102,18 +66,32 @@ ${urlHost || "egroup"} = select, policy-path=${convertedUrls[0]?.convertedUrl}
             </button>
           </div>
         </div>
-        {convertedUrls.map(({ url, convertedUrl, urlHost }, index) => (
-          <div key={index} className="break-all p-3 mt-4 rounded-lg text-gray-100 bg-gray-900 shadow-sm w-full">
-            {convertedUrl}
+        {convertedUrls.map(({ url, convertedUrl, urlHost }, index) => {
+          const clashConfig = `# Clash 配置格式\n\nproxy-providers:\n  ${
+            urlHost || "provider1"
+          }:\n    type: http\n    url: ${
+            convertedUrl || ""
+          }\n    interval: 600\n    path: ./${urlHost || "provider1"}.yaml\n    health-check:\n      enable: true\n      interval: 600\n      url: http://www.gstatic.com/generate_204\n`;
+          const surgeConfig = `# Surge 配置格式\n\n[Proxy Group]\n${
+            urlHost || "egroup"
+          } = select, policy-path=${convertedUrl || ""}\n`;
 
-            <CopyToClipboard text={convertedUrl} onCopy={() => copiedToast()}>
-              <div className="flex items-center text-sm mt-4 text-gray-400 cursor-pointer hover:text-gray-300 transition duration-200 select-none">
-                <DuplicateIcon className="h-5 w-5 mr-1 inline-block" />
-                点击复制
-              </div>
-            </CopyToClipboard>
-          </div>
-        ))}
+          return (
+            <div
+              key={index}
+              className="break-all p-3 mt-4 rounded-lg text-gray-100 bg-gray-900 shadow-sm w-full"
+            >
+              {convertedUrl}
+
+              <CopyToClipboard text={convertedUrl} onCopy={() => copiedToast()}>
+                <div className="flex items-center text-sm mt-4 text-gray-400 cursor-pointer hover:text-gray-300 transition duration-200 select-none">
+                  <DuplicateIcon className="h-5 w-5 mr-1 inline-block" />
+                  点击复制
+                </div>
+              </CopyToClipboard>
+            </div>
+          );
+        })}
         {convertedUrls.length > 0 && (
           <div className="w-full p-4 mt-4 text-gray-100 bg-gray-900 rounded-lg hidden md:block">
             {target !== "surge" && <pre className="whitespace-pre-wrap">{clashConfig}</pre>}
