@@ -13,12 +13,6 @@ export default function Home() {
   const [urls, setUrls] = useState([]);
   const [target, setTarget] = useState("clash");
 
-  const convertedUrls = urls.map((url) => ({
-    url,
-    convertedUrl: `${host}/api/convert?url=${encodeURIComponent(url)}&target=${target}`,
-    urlHost: getUrlHost(url),
-  }));
-
   function getUrlHost(url) {
     let urlHost = "";
     try {
@@ -28,6 +22,12 @@ export default function Home() {
     }
     return urlHost;
   }
+
+  const convertedUrls = urls.map((url) => ({
+    url,
+    convertedUrl: `${host}/api/convert?url=${encodeURIComponent(url)}&target=${target}`,
+    urlHost: getUrlHost(url),
+  }));
 
   const copiedToast = () =>
     toast("已复制", {
@@ -139,7 +139,106 @@ ${urlHost || "egroup"} = select, policy-path=${convertedUrl}
             </button>
           </div>
         </div>
-        {/* Remaining code is the same */}
+        {convertedUrls.map(({ url, convertedUrl, urlHost }, index) => (
+          <div key={index} className="break-all p-3 mt-4 rounded-lg text-gray-100 bg-gray-900 shadow-sm w-full">
+            {convertedUrl}
+
+            <CopyToClipboard text={convertedUrl} onCopy={() => copiedToast()}>
+              <div className="flex items-center text-sm mt-4 text-gray-400 cursor-pointer hover:text-gray-300 transition duration-200 select-none">
+                <DuplicateIcon className="h-5 w-5 mr-1 inline-block" />
+                点击复制
+              </div>
+            </CopyToClipboard>
+          </div>
+        ))}
+        {convertedUrls.length > 0 && (
+          <div className="w-full p-4 mt-4 text-gray-100 bg-gray-900 rounded-lg hidden md:block">
+            {target !== "surge" && <pre className="whitespace-pre-wrap">{clashConfig}</pre>}
+
+            {target === "surge" && <pre>{surgeConfig}</pre>}
+
+            <CopyToClipboard
+              text={target === "surge" ? surgeConfig : clashConfig}
+              onCopy={() => copiedToast()}
+            >
+              <div className="flex items-center text-sm mt-4 text-gray-400 cursor-pointer hover:text-gray-300 transition duration-200 select-none">
+                <DuplicateIcon className="h-5 w-5 mr-1 inline-block" />
+                点击复制
+              </div>
+            </CopyToClipboard>
+          </div>
+        )}
+        <div className="w-full text-gray-900 mt-14">
+          <h3 className="text-lg md:text-xl font-bold">
+            怎么自己部署转换工具？
+          </h3>
+          <p className="mt-2">
+            使用工具时，{host} 的拥有者将会有权限查看到你的订阅地址，如果你不想让给他人这种权限，你可以根据下面步骤你可以零成本部署一个属于你的转换工具。
+          </p>
+          <p className="mt-2">
+            前期准备：你需要一个{" "}
+            <a
+              href="https://github.com"
+              target="_blank"
+              className="text-yellow-600 transition hover:text-yellow-500"
+            >
+              GitHub
+            </a>{" "}
+            账号
+          </p>
+          <ul className="mt-1">
+            <li>
+              1. 打开{" "}
+              <a
+                href="https://github.com/qqhsx/proxy-provider-converter"
+                target="_blank"
+                className="text-yellow-600 transition hover:text-yellow-500"
+              >
+                https://github.com/qqhsx/proxy-provider-converter
+              </a>
+            </li>
+            <li>2. 点击右上角的 Fork 按钮</li>
+            <li>
+              3. 打开{" "}
+              <a
+                href="https://vercel.com"
+                target="_blank"
+                className="text-yellow-600 transition hover:text-yellow-500"
+              >
+                Vercel.com
+              </a>{" "}
+              ，使用 GitHub 登录。
+            </li>
+            <li>
+              4. 选择 New Project，点击 proxy-provider-converter 旁边的 Import
+              按钮, 点击 PERSONAL ACCOUNT 旁边的 Select，最后点击 Deploy
+            </li>
+            <li>5. 等待部署完成后点击 Vercel 项目面板上的 Visit 按钮就可以访问你部署的版本了</li>
+          </ul>
+        </div>
+        <div className="w-full text-gray-900 mt-14">
+          <h3 className="text-lg md:text-xl font-bold">资源</h3>
+          <ul className="mt-1 list-disc list-inside	">
+            <li>
+              <a
+                href="https://github.com/Dreamacro/clash/wiki/configuration#proxy-providers"
+                target="_blank"
+                className="text-yellow-600 transition hover:text-yellow-500"
+              >
+                Clash Wiki 中的 Proxy Providers 章节
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://manual.nssurge.com/policy/group.html"
+                target="_blank"
+                className="text-yellow-600 transition hover:text-yellow-500"
+              >
+                Surge Policy Group 文档
+              </a>
+            </li>
+          </ul>
+        </div>
       </main>
 
       <footer className="w-full p-4 max-w-4xl md:py-8">
