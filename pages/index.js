@@ -113,8 +113,7 @@ ${urlHost || "egroup"} = select, policy-path=${convertedUrl}
             </a>{" "}
             是 Clash
             的一项功能，可以让用户从指定路径动态加载代理服务器列表。使用这个功能你可以将
-            Clash
-            订阅里面的代理服务器提取出来，放到你喜欢的配置文件里，也可以将多个
+            Clash 订阅里面的代理服务器提取出来，放到你喜欢的配置文件里，也可以将多个
             Clash 订阅里的代理服务器混合到一个配置文件里。External Group 则是
             Proxy Provider 在 Surge 里的叫法，作用是一样的。
           </p>
@@ -218,7 +217,7 @@ ${urlHost || "egroup"} = select, policy-path=${convertedUrl}
         </div>
         <div className="w-full text-gray-900 mt-14">
           <h3 className="text-lg md:text-xl font-bold">资源</h3>
-          <ul className="mt-1 list-disc list-inside	">
+          <ul className="mt-1 list-disc list-inside ">
             <li>
               <a
                 href="https://github.com/Dreamacro/clash/wiki/configuration#proxy-providers"
